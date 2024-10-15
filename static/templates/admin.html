@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Problem Statement</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style2.css') }}">
+    <style>
+        .navbar-brand img {
+            max-height: 40px;
+            margin-right: 10px;
+        }
+        .header, .footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #f8f9fa;
+        }
+        .footer p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Company Logo">
+                Simple Code Interpreter
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/addps">ADD PS</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/editor">Go to Editor</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/problems">Solve Problems</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/home">Home</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container mt-5">
+        <h1 class="text-center">Enter Problem Statement and Test Cases</h1>
+        <form id="problem-form" method="POST" action="/submit_problem">
+            <div class="form-group">
+                <label for="problem-statement">Problem Statement:</label>
+                <textarea class="form-control" name="problem_statement" id="problem-statement" rows="5" placeholder="Describe the problem statement here..." required></textarea>
+                <br>
+                <label for="description">Description:</label>
+                <textarea class="form-control" name="description" id="description" rows="5" placeholder="Add the description here..." required></textarea>
+                <br>
+                <label for="constraints">Constraints:</label>
+                <textarea class="form-control" name="constraints" id="constraints" rows="5" placeholder="Add the constraints here..." required></textarea>
+                <br>
+            </div>
+            <button type="reset" class="btn btn-warning mb-3">Clear</button>
+            
+            <h2 class="mt-4">Test Cases</h2>
+            <div id="test-cases-container">
+                <div class="form-row test-case-group mb-2">
+                    <div class="col-md-5 mb-3">
+                        <input type="text" class="form-control" name="test_input[]" placeholder="Test case input" required />
+                    </div>
+                    <div class="col-md-5 mb-3">
+                        <input type="text" class="form-control" name="expected_output[]" placeholder="Expected output" required />
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-danger" onclick="removeTestCase(this)">Remove</button>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-info mb-3" onclick="addTestCase()">Add Another Test Case</button>
+            <button type="submit" class="btn btn-info mb-3">Submit</button>
+        </form>
+        <br>
+        <a href="{{ url_for('home') }}" class="btn btn-secondary">Click Here to Go Back</a>
+    </div>
+
+    <footer class="footer mt-5">
+        <p>&copy; 2024 Your Company. All rights reserved.</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function addTestCase() {
+            const container = document.getElementById('test-cases-container');
+            const newTestCase = document.createElement('div');
+            newTestCase.className = 'form-row test-case-group mb-2';
+            newTestCase.innerHTML = `
+                <div class="col-md-5 mb-3">
+                    <input type="text" class="form-control" name="test_input[]" placeholder="Test case input" required />
+                </div>
+                <div class="col-md-5 mb-3">
+                    <input type="text" class="form-control" name="expected_output[]" placeholder="Expected output" required />
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-danger" onclick="removeTestCase(this)">Remove</button>
+                </div>
+            `;
+            container.appendChild(newTestCase);
+        }
+
+        function removeTestCase(button) {
+            const testCaseGroup = button.parentNode.parentNode;
+            testCaseGroup.remove();
+        }
+    </script>
+</body>
+</html>
+
+
+ <!-- <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const codeEditor = CodeMirror.fromTextArea(document.getElementById('code-editor'), {
+        lineNumbers: true,
+        mode: 'python',
+        theme: 'default',
+        autoCloseBrackets: true,
+        matchBrackets: true,
+        styleActiveLine: true,
+        extraKeys: { "Ctrl-Space": "autocomplete" }
+      });
+  
+      const languageSelector = document.getElementById('language');
+      const themeSelector = document.getElementById('theme');
+      const outputElement = document.getElementById('output');
+      const testCasesElement = document.getElementById('test-cases');
+      const scoreElement = document.getElementById('score');
+  
+      languageSelector.addEventListener('change', function () {
+        const language = languageSelector.value;
+        if (language === 'python') {
+          codeEditor.setOption('mode', 'python');
+        } else if (language === 'java') {
+          codeEditor.setOption('mode', 'text/x-java');
+        }
+      });
+  
+      themeSelector.addEventListener('change', function () {
+        const theme = themeSelector.value;
+        codeEditor.setOption('theme', theme);
+      });
+  
+      document.getElementById('run-button').addEventListener('click', function () {
+        const userCode = codeEditor.getValue();
+        const language = languageSelector.value;
+  
+            fetch('/execute_code', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code: userCode, language: language })
+          })
+          .then(response => response.json())
+          .then(data => {
+            console.log('Execution Data:', data); // Log data received from backend
+            if (data.output) {
+              outputElement.innerHTML = `<pre><h1>${data.output}</h1></pre>`;
+            } else if (data.error) {
+              outputElement.innerHTML = `<pre style="color: red;">${data.error}</pre>`;
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error); // Log any errors
+            outputElement.innerHTML = '<pre style="color: red;">Error executing code. Please try again.</pre>';
+          });
+
+      });
+  
+      document.getElementById('submit-button').addEventListener('click', function () {
+        // Display submission confirmation
+        alert('Thank you, your code is submitted.');
+        
+        // Redirect to dashboard after a short delay
+        setTimeout(function () {
+          window.location.href = '/dashboard/{{ user["fname"] }}';
+        }, 50000); // 2000 milliseconds (2 seconds) delay before redirecting
+      });
+  
+      let sessionTimeout = 500;
+      let countdown = sessionTimeout;
+      const countdownElement = document.getElementById('countdown');
+  
+      // Function to update the countdown
+      function updateCountdown() {
+        countdown--;
+        countdownElement.textContent = countdown;
+  
+        if (countdown <= 0) {
+          alert('Your session has timed out.');
+          window.location.href = '/dashboard/{{ user["fname"] }}';
+        } else {
+          setTimeout(updateCountdown, 1000);
+        }
+      }
+  
+      // Start the countdown
+      updateCountdown();
+    });
+  
+    document.addEventListener('copy', function (e) {
+      e.preventDefault();
+      alert('Copying is disabled on this page.');
+    });
+  
+    document.addEventListener('paste', function (e) {
+      e.preventDefault();
+      alert('Pasting is disabled on this page.');
+    });
+  
+    // Warn before reload and redirect to home on reload
+    window.addEventListener('beforeunload', function (e) {
+      e.preventDefault();
+      e.returnValue = 'Are you sure you want to reload the page? You will be redirected to the home page.';
+    });
+  
+    window.addEventListener('unload', function () {
+      window.location.href = '/dashboard/{{ user["fname"] }}'; // Redirect to home page
+    });
+  </script> -->

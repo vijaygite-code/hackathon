@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Hackathon</title>
+    <meta name="description" content="It is artiset hackathon ">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="ntUFSe18AqnePAZFrbNZ5cSVRyXndF_cBrPCwZgZ4CY" />
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{url_for('static', filename='css/base.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ url_for('static', filename='css/flexslider.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ url_for('static', filename='css/venobox.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ url_for('static', filename='css/fonts.css') }}s" rel="stylesheet" type="text/css" media="all" />
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:300,400,500,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,700" rel="stylesheet">
+
+    <style>
+        .user-greeting {
+            font-size: 16px;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+        
+        .wrapper {
+            /* max-width: 1100px; */
+            width: 100%;
+            position: relative;
+        }
+        
+        .wrapper i {
+            height: 50px;
+            width: 50px;
+            background: rgb(118, 233, 118);
+            text-align: center;
+            line-height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            font-size: 1.25 rem;
+            transform: translateY(-50%);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.23);
+        }
+        
+        .wrapper i:first-child {
+            left: -22px;
+        }
+        
+        .wrapper i:last-child {
+            right: -22px;
+        }
+        
+        .wrapper .carousel {
+            display: grid;
+            grid-auto-flow: column;
+            grid-auto-columns: calc((100% / 3) - 12px);
+            gap: 16px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            scrollbar-width: 0;
+        }
+        
+        .carousel::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .carousel :where(.card, .img) {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .carousel.dragging {
+            scroll-snap-type: none;
+            scroll-behavior: auto;
+        }
+        
+        .carousel.no-transition {
+            scroll-behavior: auto;
+        }
+        
+        .carousel.dragging .card {
+            cursor: grab;
+            user-select: none;
+        }
+        
+        .carousel .card {
+            scroll-snap-align: start;
+            height: 340px;
+            list-style: none;
+            background: #fff;
+            border-radius: 8px;
+            display: flex;
+            cursor: pointer;
+            width: 98%;
+            padding-bottom: 15px;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        
+        .card .img {
+            background: rgb(1, 22, 47);
+            width: 145px;
+            height: 145px;
+            border-radius: 50%;
+        }
+        
+        .card .img img {
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid #fff;
+        }
+        
+        .card h2 {
+            font-weight: 500;
+            font-size: 1.56rem;
+            margin: 30px 0 5px;
+        }
+        
+        .card span {
+            color: #6a6d78;
+            font-size: 1.31rem;
+        }
+        
+        @media screen and (max-width: 900px) {
+            .wrapper .carousel {
+                grid-auto-columns: calc((100% / 2) - 9px);
+            }
+        }
+        
+        @media screen and (max-width: 600px) {
+            .wrapper .carousel {
+                grid-auto-columns: 100%;
+            }
+        }
+    </style>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const carousel = document.querySelector(".carousel");
+            const arrowBtns = document.querySelectorAll(".wrapper i");
+            const wrapper = document.querySelector(".wrapper");
+
+            const firstCard = carousel.querySelector(".card");
+            const firstCardWidth = firstCard.offsetWidth;
+
+            let isDragging = false,
+                startX,
+                startScrollLeft,
+                timeoutId;
+
+            const dragStart = (e) => {
+                isDragging = true;
+                carousel.classList.add("dragging");
+                startX = e.pageX;
+                startScrollLeft = carousel.scrollLeft;
+            };
+
+            const dragging = (e) => {
+                if (!isDragging) return;
+
+                // Calculate the new scroll position 
+                const newScrollLeft = startScrollLeft - (e.pageX - startX);
+
+                // Check if the new scroll position exceeds 
+                // the carousel boundaries 
+                if (newScrollLeft <= 0 || newScrollLeft >=
+                    carousel.scrollWidth - carousel.offsetWidth) {
+
+                    // If so, prevent further dragging 
+                    isDragging = false;
+                    return;
+                }
+
+                // Otherwise, update the scroll position of the carousel 
+                carousel.scrollLeft = newScrollLeft;
+            };
+
+            const dragStop = () => {
+                isDragging = false;
+                carousel.classList.remove("dragging");
+            };
+
+            const autoPlay = () => {
+
+                // Return if window is smaller than 800 
+                if (window.innerWidth < 800) return;
+
+                // Calculate the total width of all cards 
+                const totalCardWidth = carousel.scrollWidth;
+
+                // Calculate the maximum scroll position 
+                const maxScrollLeft = totalCardWidth - carousel.offsetWidth;
+
+                // If the carousel is at the end, stop autoplay 
+                if (carousel.scrollLeft >= maxScrollLeft) return;
+
+                // Autoplay the carousel after every 2500ms 
+                timeoutId = setTimeout(() =>
+                    carousel.scrollLeft += firstCardWidth, 2500);
+            };
+
+            carousel.addEventListener("mousedown", dragStart);
+            carousel.addEventListener("mousemove", dragging);
+            document.addEventListener("mouseup", dragStop);
+            wrapper.addEventListener("mouseenter", () =>
+                clearTimeout(timeoutId));
+            wrapper.addEventListener("mouseleave", autoPlay);
+
+            // Add event listeners for the arrow buttons to 
+            // scroll the carousel left and right 
+            arrowBtns.forEach(btn => {
+                btn.addEventListener("click", () => {
+                    carousel.scrollLeft += btn.id === "left" ?
+                        -firstCardWidth : firstCardWidth;
+                });
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <div class="wrapper" id="wrapper">
+        <section class="hero overlay">
+            <div class="main-slider slider">
+                <ul class="slides">
+                    <li>
+                        <div class="background-img" style="background-image: url('{{ url_for('static', filename='img/bg.jpeg') }}');">
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <header class="header">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <a class="scroll logo" href="#wrapper">
+                                <img class="logo-default" src="{{ url_for('static', filename='img/logo.png') }}" height="100" width="35" alt="logo" />
+                            </a>
+                            
+                        </div>
+                        <div class="col-md-9 text-right">
+                            <nav class="main-nav">
+                                <div class="toggle-mobile-but">
+                                    <a href="#" class="mobile-but">
+                                        <div class="lines"></div>
+                                    </a>
+                                </div>
+                                <ul>
+                                    <li><a class="scroll" href="{{ url_for('home') }}">Home</a></li>
+                                    <li><a class="scroll" href="#about">About</a></li>
+                                    <li><a class="scroll" href="https://docs.google.com/document/d/e/2PACX-1vRpRp4C4Ebo1qeWhGDl3_s3Cd075c3RdvMMLazpGXxsAnt29P0X2DBpUv7VH-facDBNWWgVT0y46x43/pub">Rules</a></li>
+                                    <li><a class="scroll" href="#sponsors">FAQs</a></li>
+                                    <li><a class="scroll" href="{{ url_for('login') }}">Login</a></li>
+                                    <li><a class="scroll" href="{{ url_for('register') }}">Register</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <div class="inner-hero fade-out">
+                <div class="container hero-content">
+                    <div class="row">
+                        <img class="logo-default" src="{{ url_for('static', filename='img/logof.png') }}" alt="logo" />
+                        <h1>HACK4HIRE BY ARTISET</h1>
+                        <p class="gradient-text"><strong> Code Your Way to a Career: Join the Hackathon!</strong></p>
+                        <a href="/register" class="but scroll "> Register Now</a>
+                    </div>
+                    <div class="col">
+                        <section id="about" class="about pt-120 pb-120 brd-bottom">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-sm-8 col-sm-offset-2 mb-100 text-center">
+                                        <linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="5.1983" y1="28.1187" x2="43.4067" y2="11.702">
+                                            <stop offset="0" style="stop-color:#399BFF" />
+                                            <stop offset="1" style="stop-color:#EE71F9" />
+                                            <h1 class="title">About HACK4HIRE</h1>
+                                        </linearGradient>
+                                        <p class="title-lead mt-20" style="color: white;">
+                                            Welcome to HACK4HIRE, where innovation meets opportunity! Our hackathon is designed to bring together talented students from diverse backgrounds to collaborate on real-world challenges. Over the course of duration, participants will work in teams to develop
+                                            innovative solutions, network with industry professionals, and gain exposure to potential employers.
+                                        </p>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+        <br><br>
+        <section id="faq" class="faq pt-120 pb-120 brd-bottom" style="margin-top: 20%;">
+            <div class="container">
+                <div class="row">
+                    <div class="wrapper">
+                        <i id="left" class="fa-solid  fas fa-angle-left"></i>
+                        <p class="text-[20px] font-medium text-lc-text-secondary dark:text-dark-lc-text-secondary">Upcoming Contest</p>
+                        <br>
+                        <ul class="carousel">
+                            <li class="card">
+                                <img class="img" src="{{ url_for('static', filename='img/contest1.png') }}" alt="" draggable="false" />
+
+                                <h2 style="color: rgb(74, 95, 231); font-weight:bold;">
+                                    contest name
+                                </h2>
+                                <h3 style="color: black;">Date: 2024-07-24 </h3>
+                                <h3 style="color: black;">Time: 10:00 AM </h3>
+                            </li>
+
+                            <li class="card">
+                                <div class="img"><img src="https://cdn4.vectorstock.com/i/1000x1000/94/28/computer-coding-circle-icon-vector-27719428.jpg" alt="" draggable="false"> </div>
+                                <h2 style="color: rgb(74, 95, 231); font-weight:bold;">
+                                    contest name
+                                </h2>
+                                <h3 style="color: black;">Date: 2024-07-24 </h3>
+                                <h3 style="color: black;">Time: 10:00 AM </h3>
+                            </li>
+                            <li class="card">
+                                <div class="img"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkrjkXy0kF5mt-DNyMWF8gm_VmrstvYWv8bmBo7EyPMSHR_UVCS6VoDpHthKVv3prgEHw&usqp=CAU" alt="" draggable="false"> </div>
+                                <h2 style="color: rgb(74, 95, 231); font-weight:bold;">
+                                    contest name
+                                </h2>
+                                <h3 style="color: black;">Date: 2024-07-24 </h3>
+                                <h3 style="color: black;">Time: 10:00 AM </h3>
+                            </li>
+                            <li class="card">
+                                <div class="img"><img src="https://cdn1.vectorstock.com/i/1000x1000/70/85/computer-display-flat-circle-icon-vector-9327085.jpg" alt="" draggable="false"> </div>
+                                <h2 style="color: rgb(74, 95, 231); font-weight:bold;">
+                                    contest name
+                                </h2>
+                                <h3 style="color: black;">Date: 2024-07-24 </h3>
+                                <h3 style="color: black;">Time: 10:00 AM </h3>
+                            </li>
+                            <li class="card">
+                                <div class="img"><img src="https://cdn3.vectorstock.com/i/1000x1000/56/87/laptop-computer-circle-icon-vector-10465687.jpg" alt="" draggable="false"> </div>
+                                <h2 style="color: rgb(74, 95, 231); font-weight:bold;">
+                                    contest name
+                                </h2>
+                                <h3 style="color: black;">Date: 2024-07-24 </h3>
+                                <h3 style="color: black;">Time: 10:00 AM </h3>
+                            </li>
+                            <li class="card">
+                                <div class="img"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS847kWElWG673CkQIuYJVaYke5APbXW7jSXF9ihVrQkxonWXXnrHs8Uc3wu-FDnTjMU9Y&usqp=CAU" alt="" draggable="false"> </div>
+                                <h2 style="color: rgb(74, 95, 231); font-weight:bold;">
+                                    contest name
+                                </h2>
+                                <h3 style="color: black;">Date: 2024-07-24 </h3>
+                                <h3 style="color: black;">Time: 10:00 AM </h3>
+                            </li>
+                        </ul>
+                        <i id="right" class="fa-solid fas fa-angle-right"></i>
+                    </div>
+
+        </section><br><br>
+        <!-- <div class="container">
+            <div class="container schedule">
+                <div class="row" id="sponsors">
+                    <div class="col-sm-8">
+                        <ul class="block-tab">
+                            <li class="active ">
+                                <div class="block-date"><strong>FAQs</strong></div>
+                                <div class="block-detail"><span class="time">Who can participate? 🌐</span>
+                                    <div class="block-text">
+                                        <p>HACK2HIRE is open to a diverse range of participants, including students, professionals, and individuals with varying skill levels. Whether you are a beginner or an experienced developer, despite the field of academic
+                                            discipline chosen, you are eligible to join us! 🚀</p>
+                                    </div>
+                                </div>
+                                <div class="block-detail"><span class="time">Do I need to pay a registration fee to participate in the hackathon?</span>
+                                    <div class="block-text">
+                                        <p>No. here is no registration fee for participating in the hackathon. This approach ensures that creativity and innovation can flourish without restrictions, allowing participants to immerse themselves in a collaborative
+                                            and dynamic environment.🌐✨</p>
+                                    </div>
+                                </div>
+                                <div class="block-detail"><span class="time">What should be the team size?</span>
+                                    <div class="block-text">
+                                        <p>it is a individual competition, solving the problem statemts is not allowed. </p>
+                                    </div>
+                                </div>
+                                <div class="block-detail"><span class="time">Have more questions? 🤔</span>
+                                    <div class="block-text">
+                                        <p>Feel free to write to us at Admin@artiset.in . </p>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div><br><br> -->
+    </div>
+    <div class="row">
+        
+    </div>
+    <div class="wrapper">
+    <section>   
+        <footer class="pt-20  bg-dark">
+            <div class="bottom-footer bg-black pt-50 pb-50">
+                <div class="container ">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p class="gradient-text">&copy; Made with 🖤 ARTISET Team</p><a class="gradient-text scroll" href=mailto:admin@artiset.in>Contact us</a></div>
+                        <div class="col-md-6">
+                            <ul class="block-legal">
+                                <li><span><a class="gradient-text scroll" href="https://docs.google.com/document/d/e/2PACX-1vRpRp4C4Ebo1qeWhGDl3_s3Cd075c3RdvMMLazpGXxsAnt29P0X2DBpUv7VH-facDBNWWgVT0y46x43/pub">Rules & Code of Conduct</a></span></li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6 ">
+                            <ul class="block-legal">
+                                <li><span><a class="gradient-text scroll" href="#wrapper">Back To Top</a></span></li>
+                            </ul>
+                        </div>
+                        <ul class="block-legal">
+                            <li><span><a class="gradient-text scroll">Version 1.2.0</a></span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </section>
+</div>
+            <script src="js/jquery-1.12.4.min.js" type="text/javascript"></script>
+        <script src="js/jquery.flexslider-min.js" type="text/javascript"></script>
+        <script src="js/jquery.countdown.min.js" type="text/javascript"></script>
+        <script src="js/jquery.countdown.js" type="text/javascript"></script>
+        <script src="js/smooth-scroll.js" type="text/javascript"></script>
+        <script src="js/jquery.validate.min.js" type="text/javascript"></script>
+        <script src="js/placeholders.min.js" type="text/javascript"></script>
+        <script src="js/venobox.min.js" type="text/javascript"></script>
+        <script src="js/script.js" type="text/javascript"></script>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-136937845-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+
+            gtag('js', new Date());
+            gtag('config', 'UA-136937845-1');
+        </script>
+</body>
+
+</html>

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Artiset Hackathon">
+    <meta name="google-site-verification" content="ntUFSe18AqnePAZFrbNZ5cSVRyXndF_cBrPCwZgZ4CY" />
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ url_for('static', filename='css/base.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ url_for('static', filename='css/flexslider.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ url_for('static', filename='css/venobox.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ url_for('static', filename='css/fonts.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:300,400,500,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,700" rel="stylesheet">
+    <title>{{ username["fname"]}} {{username["lname"] }}</title>
+    <style>
+        /* Popup container - can be anything you want */
+        
+        .announcement-card {
+            background-color: black;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .announcement-card .card-header {
+            background-color: #007bff;
+            color: black;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+        
+        .announcement-card .card-body {
+            font-size: 1.1rem;
+        }
+        
+        .announcement-card a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        
+        .announcement-card a:hover {
+            text-decoration: underline;
+        }
+        
+        .popup {
+            display: none;
+            position: fixed;
+            z-index: 9;
+            padding-top: 100px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+        /* Popup content */
+        
+        .popup-content {
+            background-color: #000000;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #adadad;
+            width: 80%;
+            max-width: 300px;
+            text-align: center;
+        }
+        /* Close button */
+        
+        .close {
+            color: #ffffff;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div class="container-fluid">
+        <header class="header">
+            <nav class="main-nav">
+                <div class="col-md-6">
+                    <span class="user-greeting">Hack4Hire</span>
+                </div>
+                <div class="col-md-6">
+                    <ul class="nav-item">
+                        <li><a class="scroll" href="{{ url_for('home') }}">Home</a></li>
+                        <li><a class="scroll" href="https://docs.google.com/document/d/e/2PACX-1vRpRp4C4Ebo1qeWhGDl3_s3Cd075c3RdvMMLazpGXxsAnt29P0X2DBpUv7VH-facDBNWWgVT0y46x43/pub">Rules</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+    </div>
+
+    <div class="container">
+        <ul class="slides">
+            <li>
+                <div class="background-img" style="background-image: url('{{ url_for('static', filename='img/back2.jpeg') }}'); opacity: 0.2;">
+                </div>
+            </li>
+        </ul>
+    </div>
+    <br><br><br><br>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card" style="width: 30rem; height: 500px;">
+                    <div class="card-body">
+                        <h5 class="card-title">My Profile</h5>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item bg-dark">Name: {{ username["fname"]}} {{username["lname"]}}</li>
+                        <li class="list-group-item bg-dark">College:{{ username["college"]}}</li>
+                        <li class="list-group-item bg-dark">Email: {{ username["email"]}}</li>
+                    </ul>
+                    <div class="card-body">
+                        <div class="col-sm-12">
+                            <ul class="block-tab">
+                                <li class="active">
+                                    <div class="block-date"><strong>My Hackathons Resulsts</strong></div>
+                                    <div class="block-detail">
+                                        <span class="time">{{ contests['Contest']}}</span>
+                                        <span class="time">{{ contests['psno']}}</span>
+                                        <p> Max Score: <span class="time">{{ contests['Max_Score']}}</span></p>
+                                        <span class="topic">Results:</span>
+                                        <div class="block-text">
+                                            <p> Not attempted yet: contests['Description'].</p>
+                                        </div>
+                                    </div>
+                                    <div class="block-detail">
+                                        <span class="time">QA Hackathon</span>
+                                        <span class="topic">Resulsts:</span>
+                                        <div class="block-text">
+                                            <p>This shows username["contest"]["results"]</p>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="col-sm-12">
+                    <ul class="block-tab">
+                        <li class="active">
+                            <div class="block-date"><i class="et-line-calendar"></i><strong>Live Hackathons</strong></div>
+                            <div class="block-detail">
+                                <span class="time">{{ contests['Contest']}}</span>
+                                <p> Max Score: <span class="time">{{ contests['Max_Score']}}</span></p>
+                                <span class="topic">Description</span>
+                                <div class="block-text">
+                                    <p>{{ contests['Description']}}.</p>
+                                    <a href="#" class="btn btn-primary start-button">Start</a>
+                                </div>
+                            </div>
+                            <div class="block-detail">
+                                <span class="time">QA Hackathon</span>
+                                <span class="topic">Description</span>
+                                <div class="block-text">
+                                    <p>8:00 AM - BREAKFAST</p>
+                                    <p>9:00 AM - SWAGS AND PHOTOS</p>
+                                    <p>11:00 AM - WORKSHOP</p>
+                                    <p>12:30 PM - LUNCH</p>
+                                    <p>2:00 PM - PRESENTATIOS AND CLOSING CEREMONY</p>
+                                    <a href="#" class="btn btn-primary start-button">Start</a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="container mt-5 justify-content-around">
+                    <div class="row justify-content-center">
+                        <div class="card announcement-card">
+                            <div class="card-header">
+                                <h5 class="mt-5">Announcements</h5>
+                            </div>
+                            <br><br>
+                            <div class="card-body">
+                                <p class="card-text">
+                                    Welcome to the Hackathon! Please make sure to check the schedule and join the opening session at 9:00 AM.
+                                </p>
+                                <p class="card-text">
+                                    Remember to submit your projects by the deadline. Good luck and have fun!
+                                </p>
+                                <p class="card-text">
+                                    For any inquiries, please contact the event organizers at <a href="mailto:organizers@hackathon.com">organizers@hackathon.com</a>.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <!-- Popup container -->
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <span class="close">&times;</span>
+            <p>Are you sure you want to launch the contest, as soon as you click on yes timer for contest will start </p>
+            <button class="btn btn-primary" id="confirmStart">Yes</button>
+            <button class="btn btn-secondary" id="cancelStart">No</button>
+        </div>
+    </div>
+
+    <footer class="pt-20 bg-dark">
+        <div class="bottom-footer bg-black pt-50 pb-50">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="gradient-text"> &copy; Made with 🖤 ARTISET Team</p>
+                        <a class="gradient-text scroll" href="mailto:admin@artiset.in">Contact us</a>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="block-legal">
+                            <li><span><a class="gradient-text scroll" href="https://docs.google.com/document/d/e/2PACX-1vRpRp4C4Ebo1qeWhGDl3_s3Cd075c3RdvMMLazpGXxsAnt29P0X2DBpUv7VH-facDBNWWgVT0y46x43/pub">Rules & Code of Conduct</a></span></li>
+                        </ul>
+                    </div>
+                </div>
+                <ul class="block-legal">
+                    <li><span><a class="gradient-text scroll">Version 1.2.0</a></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        </div>
+        </div>
+    </footer>
+    <script>
+        // Get the elements
+        const startButtons = document.querySelectorAll('.start-button');
+        const popup = document.getElementById('popup');
+        const closeBtn = document.querySelector('.close');
+        const confirmBtn = document.getElementById('confirmStart');
+        const cancelBtn = document.getElementById('cancelStart');
+
+        // Add click event to all start buttons
+        startButtons.forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                popup.style.display = 'block';
+            });
+        });
+
+        // Close the popup when clicking on the close button or cancel button
+        closeBtn.addEventListener('click', function() {
+            popup.style.display = 'none';
+        });
+
+        cancelBtn.addEventListener('click', function() {
+            popup.style.display = 'none';
+        });
+
+        // Action to perform when clicking the confirm button
+        confirmBtn.addEventListener('click', function() {
+            counter = 1;
+            popup.style.display = 'none';
+            window.location.href = "{{ url_for('code', username=username, counter=counter, contest=contests['Contest']) }}";
+        });
+
+        // Close the popup if the user clicks anywhere outside of the popup content
+        window.onclick = function(event) {
+            if (event.target == popup) {
+                popup.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+
+</html>

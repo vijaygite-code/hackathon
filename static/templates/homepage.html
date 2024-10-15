@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!-- Optional: Include Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .card {
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: box-shadow 0.3s ease-in-out;
+        }
+        .card:hover {
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+        .card-header {
+            background-color: #007bff;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        .card-text {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        .list-group-item {
+            border: none;
+            font-size: 1.2rem;
+        }
+        .list-group-item:hover {
+            background-color: #f8f9fa;
+        }
+        .fa {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 class="mb-4">Welcome to Your Dashboard</h1>
+
+    <div class="card">
+        <div class="card-header" data-toggle="collapse" data-target="#personal-info">
+            <i class="fa fa-user"></i> Personal Information
+        </div>
+        <div id="personal-info" class="card-body collapse show">
+            <h5 class="card-title">{{ student.full_name }}</h5>
+            <p class="card-text">Email: {{ student.email }}</p>
+            <p class="card-text">College: {{ student.college }}</p>
+            <!-- Add more personal information fields as needed -->
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header" data-toggle="collapse" data-target="#skills">
+            <i class="fa fa-cogs"></i> Skills
+        </div>
+        <div id="skills" class="card-body collapse">
+            <ul class="list-group list-group-flush">
+                {% if student.skills %}
+                    {% for skill in student.skills %}
+                        <li class="list-group-item">{{ skill.skill_name }}</li>
+                    {% endfor %}
+                {% else %}
+                    <li class="list-group-item">No skills recorded yet.</li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header" data-toggle="collapse" data-target="#education">
+            <i class="fa fa-graduation-cap"></i> Education
+        </div>
+        <div id="education" class="card-body collapse">
+            <ul class="list-group list-group-flush">
+                {% if student.education %}
+                    {% for edu in student.education %}
+                        <li class="list-group-item">{{ edu.course }} - {{ edu.specialization }}</li>
+                    {% endfor %}
+                {% else %}
+                    <li class="list-group-item">No education details recorded yet.</li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Add more sections for interviews, comments, etc. -->
+
+</div>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

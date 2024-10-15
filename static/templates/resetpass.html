@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset Password</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script>
+        function showResetCodeInput() {
+            document.getElementById('reset-code-section').style.display = 'block';
+            document.getElementById('send-code-button').disabled = true;
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card mt-5">
+                    <div class="card-header">
+                        <h3>Reset Password</h3>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ url_for('send_reset_code') }}" method="post">
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block" id="send-code-button" onclick="showResetCodeInput()">Send Reset Code</button>
+                        </form>
+                        <div id="reset-code-section" style="display: none;">
+                            <form action="{{ url_for('handle_reset_code') }}" method="post">
+                                <input type="hidden" id="email_hidden" name="email" required>
+                                <div class="form-group">
+                                    <label for="reset_code">Enter Reset Code:</label>
+                                    <input type="text" class="form-control" id="reset_code" name="reset_code" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block">Submit Code</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

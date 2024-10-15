@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join us</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/register.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='js/register.js')}}">
+</head>
+<body>
+    <section>
+        <!-- for header section-->
+        <header class="header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3    ">
+                        <a class="scroll logo" href="#wrapper">
+                            <img class="logo-default" src="{{ url_for('static', filename='img/logo.png') }}" height="120" width="120" alt="logo" />
+                        </a>
+                    </div>
+                    <div class="col-md-9 text-right">
+                        <nav class="main-nav">
+                            <div class="toggle-mobile-but">
+                                <a href="#" class="mobile-but">
+                                    <div class="lines"></div>
+                                </a>s
+                            </div>
+                            <ul>
+                                <li><a class="scroll" href="{{ url_for('home') }}">Home</a></li>
+                                <li><a class="scroll" href="#about">About</a></li>                     
+                                <li><a class="scroll" href="{{ url_for('login') }}">Login</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </section>
+    <br><br><br><br><br>
+        <!-- For form -->
+         <form action="register" method="post">
+            <!-- Container 1-->
+            <div class="container form-container">
+                {% with messages = get_flashed_messages(with_categories=True) %}
+                    {% if messages %}
+                        <div class="alert alert-dismissible fade show" role="alert">
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }}">{{ message }}</div>
+                            {% endfor %}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endif %}
+                {% endwith %}
+            </div>
+
+            <!-- Container 2-->
+            <div class="container form-container">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="Fullname" class="form-label">Full Name 
+                            <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" class="form-control" id="Fullname" name="Fullname" placeholder="Enter your full name" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="email" class="form-label">Email
+                            <span class="text-danger">*</span>
+                        </label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" />
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Container 3-->
+            <div class="container form-container">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="inputPassword" class="form-label">Password: 
+                            <span class="text-danger">*</span>
+                        </label>
+                        <input type="password" class="form-control" id="inputPassword" name="inputPassword" placeholder="Enter your password" oninput="validatePassword()" />
+                        <div class="pass-check" id="pass-check" style="color: red;"></div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="confirmPassword" class="form-label">Confirm Password: 
+                            <span class="text-danger">*</span>
+                        </label>
+                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" oninput="validatePassword()" />
+                        <div id="result" class="text-danger"></div>
+                        <div class="pass-check" id="pass-check" style="color: red;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Container 4-->
+            <div class="container form-container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="mobile" class="form-label required">Mobile: 
+                            <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" class="form-control" id="mobile" name="mobile" pattern="\d{10}" inputmode="numeric" maxlength="10" placeholder="Enter 10-digit mobile number" required />
+                    </div>
+                    <div class="col-md-4">
+                        <label for="gender" class="form-label required">Gender: 
+                            <span class="text-danger">*</span>
+                        </label>
+                        <select class="form-control" id="gender" name="gender" required>
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="dob" class="form-label required">DOB: 
+                            <span class="text-danger">*</span>
+                        </label>
+                        <input type="date" class="form-control" id="dob" name="dob" required />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Container 5-->
+            <div class="container form-container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="level" class="form-label required">Education Level: 
+                            <span class="text-danger">*</span>
+                        </label>
+                        <select class="form-control" id="level" name="level" required>
+                            <option value="">Select Education Level</option>
+                            <option value="Undergraduate">Undergraduate</option>
+                            <option value="Postgraduate">Postgraduate</option>
+                            <option value="PhD">PhD</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="college" class="form-label required">College: 
+                            <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" class="form-control" id="college" name="college" required />
+                    </div>
+                    <div class="col-md-4">
+                        <label for="marks" class="form-label required">Avg Marks (In CGPA): 
+                            <span class="text-danger">*</span>
+                        </label>
+                        <input type="number" class="form-control" id="marks" name="marks" required min="0" max="10" step="0.01" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Container 6 -->
+            <div class="container form-container">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="Course" class="form-label">Course: 
+                            <span class="text-danger">*</span>
+                        </label>
+                        <select class="form-control" id="Course" name="Course" required>
+                            <option value="">Courses</option>
+                            <option value="B.Tech">B.Tech</option>
+                            <option value=" BSc"> BSc</option>
+                            <option value="MSc">MSc</option>
+                            <option value="M.Tech">M.Tech</option>
+                            <option value="BBA">BBA</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="Specialization" class="form-label">Specialization: 
+                            <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" class="form-control" id="Specialization" name="Specialization" required />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Container 7-->
+            <div class="container form-container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for=" Primary skill" class="form-label required">Primary Skill: 
+                            <span class="text-danger">*</span>
+                        </label>
+                        <select class="form-control" id=Primary skill name="Primary skill" required>
+                            <option value="">Select Skill</option>
+                        {% for skill in skills %}
+                        
+                            <option value="{{ skill }}">{{ skill }}</option>
+                        {% endfor %}
+                    
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="Secondary skill" class="form-label">Secondary Skill: 
+                            <span class="text-danger"></span>
+                        </label>
+                        <select class="form-control" id="Secondary skill" name="Secondary skill">
+                            <option value="">Select Skill</option>
+                        {% for skill in skills %}
+                        
+                            <option value="{{ skill }}">{{ skill }}</option>
+                        {% endfor %}
+                    
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <!-- This is to be renamed from optional skills to interested job field-->
+                        <label for="Position Applying " class="form-label">Position Applying : 
+                            <span class="text-danger"></span>
+                        </label>
+                        <select class="form-control" id="Position Applying " name="Position Applying ">
+                            <option value="">Positions</option>
+                            <option value="trainee">Intern</option>
+                            <option value="Intern">Trainee</option>
+                            <option value="Fullstack Dev">Fullstack Dev</option>
+                            <option value="Back-end">Back-end</option>
+                            <option value="Front-end">Front-end</option>
+                            <option value="Dev-ops">Dev-ops</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Container 8-->
+            <div class="container form-container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="internshipMode" class="form-label required">Internship Mode: 
+                            <span class="text-danger">*</span>
+                        </label>
+                        <select class="form-control" id="internshipMode" name="internshipMode" required>
+                            <option value="">Select Mode</option>
+                            <option value="Remote">Remote</option>
+                            <option value="On-site">On-site</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="internshipDuration" class="form-label required">Internship Duration 
+                            <span class="text-danger">*</span>:
+                        </label>
+                        <input type="text" class="form-control" id="internshipDuration" name="internshipDuration" min="10" placeholder="Months" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="homeState" class="form-label">Home State: 
+                                <span class="text-danger">*</span>
+                            </label>
+                            <select class="form-control" id="homeState" name="homeState">
+                                <option value="">Select State</option>
+                                <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Container 9-->
+            <div class="container form-container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="currstate" class="form-label">Current State: 
+                            <span class="text-danger">*</span>
+                        </label>
+                        <select class="form-control" id="currstate" name="currstate">
+                            <option value="">Select State</option>
+                            <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="preferredLocation" class="form-label">Preferred Location: 
+                            <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" class="form-control" id="preferredLocation" name="preferredLocation" required />
+                    </div>
+                    <div class="col-md-4">
+                        <label for="Currentcity" class="form-label">Current City: 
+                            <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" class="form-control" id="Currentcity" name="Currentcity" placeholder="Enter your Current City" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Container 10-->
+            <div class="container form-container">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="AlternateEmail" class="form-label">Alternate E-mail: 
+                            <span class="text-danger"></span>
+                        </label>
+                        <input type="text" class="form-control" id="AlternateEmail" name="AlternateEmail" required />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="AlternateMoblie" class="form-label">Alternate-Mobile: 
+                            <span class="text-danger"></span>
+                        </label>
+                        <input type="text" class="form-control" id="AlternateMoblie" name="AlternateMoblie" required />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Container 11-->
+            
+            <div class="container justify-content-center">
+                <button type="button" class="btn btn-primary" onclick="showConfirmation()">Submit</button>
+                <a href="/login" class="btn btn-primary ml-2">Have an account? Login</a>
+            </div>
+
+         </form>
+
+    <section>
+        <!-- For footer-->
+        <footer class="pt-20 bg-dark">
+            <div class="bottom-footer bg-black pt-50 pb-50">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="gradient-text">&copy; Made with 🖤 ARTISET Team</p>
+                                <a class="gradient-text scroll" href="mailto:admin@artiset.in">Contact us</a>
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="block-legal">
+                                    <li><span><a class="gradient-text scroll" href="https://docs.google.com/document/d/e/2PACX-1vRpRp4C4Ebo1qeWhGDl3_s3Cd075c3RdvMMLazpGXxsAnt29P0X2DBpUv7VH-facDBNWWgVT0y46x43/pub">Rules & Code of Conduct</a></span></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <ul class="block-legal">
+                            <li><span><a class="gradient-text scroll">Version 1.2.0</a></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>    
+        </footer>
+    </section>
+</body>
+</html>

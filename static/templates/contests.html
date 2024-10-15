@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* Additional custom styles can be added here */
+        .bg-light {
+            background-color: #f8f9fa; /* Light gray background */
+        }
+        .modal-body input[type="date"],
+        .modal-body input[type="time"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+<!-- Header Section -->
+<header class="header">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Company Logo">
+            Simple Code Interpreter
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('submit_problem') }}">Submit Problem</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('homepage') }}">Go to Editor</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+
+<!-- Main Content -->
+<div class="container mt-5">
+    <h1 class="text-center">Manage Hackathon Contests</h1>
+
+    <!-- Create Contest Button -->
+    <div class="text-center mb-3">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createContestModal">
+            Create Contest
+        </button>
+    </div>
+
+    <!-- Contest Submissions and Leaderboard -->
+    <div class="row">
+        <!-- Contest Submissions -->
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    Contest Submissions
+                </div>
+                <div class="card-body">
+                    <!-- Table to display contest submissions -->
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Contest ID</th>
+                                <th>Name</th>
+                                <th>Total Students</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Use Jinja template to iterate and display contests -->
+                            {% for contest in contests %}
+                            <tr>
+                                <td>{{ contest.id }}</td>
+                                <td>{{ contest.name }}</td>
+                                <td>{{ contest.total_students }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Leaderboard -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    Leaderboard
+                </div>
+                <div class="card-body">
+                    <!-- Table to display leaderboard -->
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Student Name</th>
+                                <th>Score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Display leaderboard entries -->
+                            <!-- Example: -->
+                            <tr>
+                                <td>1</td>
+                                <td>John Doe</td>
+                                <td>95</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Contest Modal -->
+<div class="modal fade" id="createContestModal" tabindex="-1" role="dialog" aria-labelledby="createContestModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createContestModalLabel">Create Contest</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Extended form for creating a contest -->
+                <form method="GET" action="{{ url_for('add_contest') }}">
+                    <div class="form-group">
+                        <label for="contest-name">Contest Name:</label>
+                        <input type="text" class="form-control" id="contest-name" name="contest_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="start-date">Start Date:</label>
+                        <input type="date" class="form-control" id="start-date" name="start_date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="end-date">End Date:</label>
+                        <input type="date" class="form-control" id="end-date" name="end_date" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Contest</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Footer -->
+<footer class="pt-20 bg-dark">
+    <div class="bottom-footer bg-black pt-50 pb-50">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="gradient-text">&copy; Made with 🖤 ARTISET Team</p>
+                    <a class="gradient-text scroll" href="mailto:admin@artiset.in">Contact us</a>
+                </div>
+                <div class="col-md-6">
+                    <ul class="block-legal">
+                        <li><span><a class="gradient-text scroll" href="https://docs.google.com/document/d/e/2PACX-1vRpRp4C4Ebo1qeWhGDl3_s3Cd075c3RdvMMLazpGXxsAnt29P0X2DBpUv7VH-facDBNWWgVT0y46x43/pub">Rules & Code of Conduct</a></span></li>
+                    </ul>
+                </div>
+            </div>
+            <ul class="block-legal">
+                <li><span><a class="gradient-text scroll">Version 1.2.0</a></span>
+                </li>
+            </ul>
+        </div>
+            </div>
+        </div>
+    </div>
+</footer>
+</div>
+
+
+<!-- Bootstrap and jQuery Scripts -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- JavaScript for Add Contest Form Submission -->
+<script>
+    document.getElementById('contest-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const contestId = document.getElementById('contest_id').value;
+        const name = document.getElementById('name').value;
+        const date = document.getElementById('date').value;
+        const time = document.getElementById('time').value;
+        const problemIds = document.getElementById('problem_ids').value.split(',');
+
+        const data = {
+            _id: contestId,
+            name: name,
+            date: date,
+            time: time,
+            problem_ids: problemIds.map(id => id.trim())
+        };
+
+        fetch('/add_contest', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(result => {
+            document.getElementById('response').innerText = result.message || 'Contest added successfully!';
+        })
+        .catch(error => {
+            document.getElementById('response').innerText = 'Error: ' + error.message;
+        });
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hack4Hire</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.6/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.6/theme/dracula.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.6/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.6/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.6/mode/clike/clike.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.6/addon/edit/closebrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.6/addon/edit/matchbrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.6/addon/hint/show-hint.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.6/addon/hint/show-hint.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.6/addon/hint/python-hint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.6/addon/selection/active-line.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.6/addon/lint/lint.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.6/addon/lint/lint.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.6/addon/lint/python-lint.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        .custom-card {
+            border-radius: 30px;
+        }
+        
+        .timer-box {
+            background-color: #fff;
+            color: #007bff;
+            padding: 10px 20px;
+            border-radius: 15px;
+            display: inline-block;
+            font-size: 18px;
+            font-weight: bold;
+            border: 2px solid #007bff;
+        }
+        /* Apply gradient background to all heading tags */
+        /* Apply rainbow gradient background to all heading tags */
+        
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Poppins', sans-serif;
+            background-image: linear-gradient(to right, violet, rgb(135, 53, 194), rgb(125, 125, 215), rgb(124, 208, 124), yellow, orange, red);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        
+        .modal-title {
+            color: black;
+        }
+        /* Apply blue color to table header */
+        /* Apply blue color to th tags */
+        
+        .table thead th {
+            background-color: #007bff;
+            color: white;
+            /* Blue color */
+        }
+        
+        .h5 {
+            font-size: 2rem;
+        }
+        
+        .navbar-custom {
+            background-color: #2f2e2e;
+            /* Black color */
+            color: white;
+        }
+        
+        .navbar-custom .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        
+        .navbar-custom .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body class="bg-dark text-white">
+
+    <header class="navbar-custom text-white py-3 animate_animated animate_fadeInDownBig">
+        <div class="container d-flex justify-content-between align-items-center">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" class="me-2" style="height: 40px;">
+            <h1 class="h5 mb-0">ARTISET</h1>
+            <div id="timer-box" class="mt-auto">
+                <div id="timer" class="timer-box">Ends in: <span id="countdown">60</span> seconds</div>
+            </div>
+        </div>
+    </header>
+    <br><br>
+    <div class="container animate_animated animate_backInUp">
+        <div class="row">
+            <h3><span>Hello, {{ user["fname"] }} {{ user["lname"] }}</span></h3>
+        </div>
+    </div>
+    <div class="container animate_animated animate_backInUp">
+        <div class="row">
+            <br><br>
+            <div class="col-md-6 animate_animated animate_fadeIn">
+                <div class="mt-1">
+                    <div id="problem-statements">
+                        {% if problem %}
+                        <div class="card mb-3 bg-dark text-white custom-card">
+                            <div class="card-body bg-secondary custom-card">
+                                <h5 class="card-title">Problem Statement:</h5>
+                                <p class="card-text">{{ problem.problem_statement }}</p>
+                            </div>
+                        </div>
+                        <div class="card mb-3 bg-dark text-white custom-card">
+                            <div class="card-body bg-secondary custom-card">
+                                <h5 class="card-title">Constraints:</h5>
+                                <p class="card-text">{{ problem.description }}</p>
+                            </div>
+                        </div>
+                        <div class="card mb-3 bg-dark text-white custom-card">
+                            <div class="card-body bg-secondary custom-card">
+                                <h5 class="card-title">Explanation:</h5>
+                                <p class="card-text">{{ problem.explanation }}</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 animate_animated animate_delay-4s">
+                <div class="mt-5">
+                    {% if problem %}
+                    <h3>Sample Input and Output</h3>
+                    <table class="table table-bordered text-white">
+                        <thead>
+                            <tr>
+                                <th>Sample Input</th>
+                                <th>Sample Output</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for test_case in problem.test_cases[:2] %}
+                            <tr>
+                                <td>{{ test_case.input }}</td>
+                                <td>{{ test_case.output }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="container">
+                    <p>{{ problem.test_cases }}</p>
+                </div>
+                <div class="mt-5">
+                    <h3>Write Your Code</h3>
+                    <form id="code-form">
+                        <div class="mb-3">
+                            <label for="language" class="form-label">Select Language</label>
+                            <select class="form-select" id="language">
+                  <option value="python">Python</option>
+                  <option value="java">Java</option>
+                </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="theme" class="form-label">Select Theme</label>
+                            <select class="form-select" id="theme">
+                  <option value="default">Default</option>
+                  <option value="dracula">Dracula</option>
+                  <option value="eclipse">Eclipse</option>
+                </select>
+                        </div>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <br><br>
+    <div class="container">
+
+        <iframe frameBorder="0" height="450px" src="https://onecompiler.com/embed/" width="100%"></iframe>
+
+    </div>
+    <div class="container animate_animated animate_backInLeft">
+        <div class="mt-5">
+            <form id="code-form">
+                <div class="mb-3">
+                    <textarea id="code-editor" class="form-control" rows="15"></textarea>
+                </div>
+                <button type="button" id="run-button" class="btn btn-primary">Run</button>
+                <button type="button" id="submit-button" class="btn btn-success">Submit</button>
+            </form>
+        </div>
+        <div class="mt-5">
+            <h3>Output</h3>
+            <div id="output" class="border p-3 bg-white rounded text-dark custom-card">The output will appear here:</div>
+        </div>
+        <div class="mt-5">
+            <h3>Test Cases</h3>
+            <div id="test-cases" class="border p-3 bg-white rounded text-dark custom-card">The test cases will appear here:</div>
+            <div id="score" class="mt-3"></div>
+        </div>
+    </div>
+    <footer class="mt-5 bg-dark text-white py-3">
+        <div class="container text-center">
+            <p>&copy; 2023 Artiset Solutions Pvt. Ltd.</p>
+        </div>
+    </footer>
+    <!-- Modal Structure -->
+    <div class="modal fade" id="exitModal" tabindex="-1" aria-labelledby="exitModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exitModalLabel">Exit Page</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Do you want to exit the page?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="confirm-exit">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const codeEditor = CodeMirror.fromTextArea(document.getElementById('code-editor'), {
+                lineNumbers: true,
+                mode: 'python',
+                theme: 'default',
+                autoCloseBrackets: true,
+                matchBrackets: true,
+                styleActiveLine: true,
+                extraKeys: {
+                    "Ctrl-Space": "autocomplete"
+                }
+            });
+
+            const languageSelector = document.getElementById('language');
+            const themeSelector = document.getElementById('theme');
+            const outputElement = document.getElementById('output');
+            const testCasesElement = document.getElementById('test-cases');
+            const scoreElement = document.getElementById('score');
+
+            languageSelector.addEventListener('change', function() {
+                const language = languageSelector.value;
+                if (language === 'python') {
+                    codeEditor.setOption('mode', 'python');
+                } else if (language === 'java') {
+                    codeEditor.setOption('mode', 'text/x-java');
+                }
+            });
+
+            themeSelector.addEventListener('change', function() {
+                const theme = themeSelector.value;
+                codeEditor.setOption('theme', theme);
+            });
+
+            document.getElementById('run-button').addEventListener('click', function() {
+                const userCode = codeEditor.getValue();
+                const language = languageSelector.value;
+
+                fetch('/execute_code', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            code: userCode,
+                            language: language
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.output) {
+                            outputElement.innerHTML = `<pre><h1>${data.output}</h1></pre>`;
+                        } else if (data.error) {
+                            outputElement.innerHTML = `<pre style="color: red;">${data.error}</pre>`;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        outputElement.innerHTML = '<pre style="color: red;">Error executing code. Please try again.</pre>';
+                    });
+            });
+
+            document.getElementById('submit-button').addEventListener('click', function() {
+                const userCode = codeEditor.getValue();
+                const language = languageSelector.value;
+
+                fetch('/check_code', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            code: userCode,
+                            language: language
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.results) {
+                            let testCaseResults = '';
+                            data.results.forEach((result, index) => {
+                                testCaseResults += `<div>Test Case ${index + 1}: ${result}</div>`;
+                            });
+                            testCasesElement.innerHTML = testCaseResults;
+                        }
+                        if (data.score) {
+                            scoreElement.innerHTML = `Score: ${data.score}`;
+                        }
+                        if (data.redirect) {
+                            window.location.href = data.redirect;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        testCasesElement.innerHTML = '<pre style="color: red;">Error checking code. Please try again.</pre>';
+                    });
+            });
+
+            let sessionTimeout = 500;
+            let countdown = sessionTimeout;
+            const countdownElement = document.getElementById('countdown');
+
+            function updateCountdown() {
+                countdown--;
+                countdownElement.textContent = countdown;
+
+                if (countdown <= 0) {
+                    alert('Your session has timed out.');
+                    window.location.href = '/dashboard/{{ user["fname"] }}';
+                } else {
+                    setTimeout(updateCountdown, 1000);
+                }
+            }
+
+            document.getElementById('submit-button').addEventListener('click', function() {
+                countdown = 3;
+                alert('Your code is submitted.');
+                if (countdown == 0) {
+                    window.location.href = '/dashboard/{{ user["fname"] }}';
+                }
+            });
+
+            updateCountdown();
+
+            function handleWarning(message) {
+                warningCount++;
+                alert(message);
+                if (warningCount >= maxWarnings) {
+                    document.getElementById('submit-button').click();
+                    setTimeout(() => {
+                        window.location.href = '/dashboard/{{ user["fname"] }}';
+                    }, 2000);
+                }
+            }
+
+            document.addEventListener('copy', function(e) {
+                e.preventDefault();
+                handleWarning('Copying is disabled on this page.');
+            });
+
+            document.addEventListener('paste', function(e) {
+                e.preventDefault();
+                handleWarning('Pasting is disabled on this page.');
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Tab') {
+                    e.preventDefault();
+                    handleWarning('Tab changes are disabled on this page.');
+                }
+            });
+
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden) {
+                    handleWarning('Tab changes or minimizing is disabled on this page.');
+                }
+            });
+
+            window.addEventListener('beforeunload', function(e) {
+                e.preventDefault();
+                handleWarning('Are you sure you want to reload the page? Your code will be submitted and you will be redirected to the home page.');
+            });
+
+            window.addEventListener('unload', function() {
+                window.location.href = '/dashboard/{{ user["fname"] }}';
+            });
+        });
+    </script>
+
+
+</body>
+
+</html>
